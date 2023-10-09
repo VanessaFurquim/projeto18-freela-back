@@ -22,7 +22,7 @@ export async function signIn (request, response) {
     try {
         const isEmailRegistered = await isEmailRegisteredRepository( { email } )
         if (isEmailRegistered.rowCount === 0) return response.status(401).send( { message: "This email address is not registered to any account!" } )
-
+        
         const isPasswordCorrect = bcrypt.compareSync(password, isEmailRegistered.rows[0].password)
         if (!isPasswordCorrect) return response.status(401).send( { message: "Invalid password!" } )
 
@@ -39,7 +39,7 @@ export async function signOut (request, response) {
     const token = response.locals.token
 
     try {
-        const deletedSession = await signUserOutRepository(token)
+        await signUserOutRepository(token)
 
         response.sendStatus(200)
 
